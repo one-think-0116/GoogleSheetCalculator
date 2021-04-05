@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <!-- Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
+    <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+    <!-- App Styling -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="plugins/jqxgrid/css/jqx.base.css" type="text/css" />
+  </head>
+  <body>
+    <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+      <!-- Header section containing logo -->
+      <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+          <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+            <h3><i class="material-icons">chat_bubble_outline</i>RMS Management</h3>
+          </div>
+          <div id="user-container">
+            <div hidden id="user-pic"></div>
+            <div hidden id="user-name"></div>
+            <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+              Sign-out
+            </button>
+            <button id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+              <i class="material-icons">account_circle</i>Sign-in with Google
+            </button>
+          </div>
+        </div>
+      </header>
+      <div class="default" id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+        <div id="grid"></div>
+      </div>
+    </div>
+    
+    <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
+      <div class="mdl-snackbar__text"></div>
+      <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+    <!-- update the version number as needed -->
+    <script src="/__/firebase/8.3.2/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script src="/__/firebase/8.3.2/firebase-auth.js"></script>
+    <script src="/__/firebase/8.3.2/firebase-database.js"></script>
+    <script src="/__/firebase/8.3.2/firebase-firestore.js"></script>
+    <script src="/__/firebase/8.3.2/firebase-functions.js"></script>
+    <script src="/__/firebase/8.3.2/firebase-messaging.js"></script>
+    <script src="/__/firebase/8.3.2/firebase-storage.js"></script>
+    <script src="/__/firebase/8.3.2/firebase-analytics.js"></script>
+    <script src="/__/firebase/8.3.2/firebase-remote-config.js"></script>
+    <script src="/__/firebase/8.3.2/firebase-performance.js"></script>
+    <!-- 
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <script src="/__/firebase/init.js?useEmulator=true"></script>
+
+    <script type="text/javascript" src="plugins/jqxgrid/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxcore.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxdata.js"></script> 
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxbuttons.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxlistbox.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxmenu.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxgrid.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxgrid.columnsresize.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxgrid.edit.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxgrid.sort.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="plugins/jqxgrid/js/jqxgrid.selection.js"></script> 
+    <script type="text/javascript" src="plugins/jqxgrid/js/demos.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/core.js"></script>
+  </body>
+</html>

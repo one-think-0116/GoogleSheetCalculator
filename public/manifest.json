@@ -1,0 +1,9 @@
+{
+    "name": "RMS Management",
+    "short_name": "RMS",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "orientation": "portrait",
+    "gcm_sender_id": "489667277470"
+  }
+  

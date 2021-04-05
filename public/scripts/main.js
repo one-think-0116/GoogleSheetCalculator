@@ -188,34 +188,34 @@ if(localStorage.getItem("auth"))
   core();
 }
 function core(){
-  var calcRef = firebase.database().ref('CALCULATOR');
-  calcRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    var calcData = {};
-    calcData.C5 = data[4][2];
-    calcData.C6 = data[5][2];
-    calcData.C7 = data[6][2];
-    calcData.C8 = data[7][2];
-    calcData.C9 = data[8][2];
-    calcData.C10 = data[9][2];
-    calcData.C11 = data[10][2];
-    calcData.C12 = data[11][2];
-    calcData.C13 = data[12][2];
-    calcData.C14 = data[13][2];
-    calcData.C15 = data[14][2];
-    calcData.C16 = data[15][2];
-    calcData.C17 = data[16][2];
-    calcData.F5 = data[4][5];
-    $("#grid").html();
-    $("#grid").off("cellendedit");
-    grid(calcData);
-    console.log("calc changed",calcData)
-  });
+  // var calcRef = firebase.database().ref('CALCULATOR');
+  // calcRef.on('value', (snapshot) => {
+  //   const data = snapshot.val();
+  //   var calcData = {};
+  //   calcData.C5 = data[4][2];
+  //   calcData.C6 = data[5][2];
+  //   calcData.C7 = data[6][2];
+  //   calcData.C8 = data[7][2];
+  //   calcData.C9 = data[8][2];
+  //   calcData.C10 = data[9][2];
+  //   calcData.C11 = data[10][2];
+  //   calcData.C12 = data[11][2];
+  //   calcData.C13 = data[12][2];
+  //   calcData.C14 = data[13][2];
+  //   calcData.C15 = data[14][2];
+  //   calcData.C16 = data[15][2];
+  //   calcData.C17 = data[16][2];
+  //   calcData.F5 = data[4][5];
+  //   $("#grid").html();
+  //   $("#grid").off("cellendedit");
+    // grid(calcData);
+    // console.log("calc changed",calcData)
+  // });
 }
 function grid(calcData){
       // prepare the data
       var data = new Array();
-     
+      var calcRef = firebase.database().ref('FORMULAS');
       firebase.firestore().collection("FORMULAS").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             var length = 20;

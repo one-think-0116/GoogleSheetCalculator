@@ -47,16 +47,161 @@
         <a href="#guide" class="mdl-tabs__tab">Guide</a>
       </div>
       
-      <div class="mdl-tabs__panel is-active" id="calculator">
-        <ul>
-          <li>Eddard</li>
-          <li>Catelyn</li>
-          <li>Robb</li>
-          <li>Sansa</li>
-          <li>Brandon</li>
-          <li>Arya</li>
-          <li>Rickon</li>
-        </ul>
+      <div class="mdl-tabs__panel is-active" id="calculator" style="">
+        <div style="display: flex;">
+          <div class="mdl-card mdl-shadow--4dp" style="width: 45%;
+          margin-left: 10%;
+          margin-top: 1%;">
+            <div class="mdl-card__title" style="margin:auto;margin-top:12px">
+              <h2 class="mdl-card__title-text">YOUR COMMISSION Calculator</h2>
+            </div>
+            <div class="" style="padding-right:50px;padding-left: 50px;">
+              <div style="display: flex;margin-top: 15px;">
+                <label for="C5" style="width: 50%;
+                text-align: center;">Select Sales Rep Status level (see next Tab) </label>
+                <div class="">
+                  <select id = "C5" style="width: 300px;background-color: yellow">
+                    <option>Bronze</option>
+                    <option>Silver</option>
+                    <option>Chairman's Club</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: flex;margin-top: 15px;">
+                <label for="C6" style="width: 50%;
+                text-align: center;">Select SelfGen Lead </label>
+                <div class="">
+                  <select id = "C6" style="width: 300px;background-color: yellow">
+                    <option>Self</option>
+                    <option>Company</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: flex;margin-top: 15px;">
+                <label for="C7" style="width: 50%;
+                text-align: center;">Select Module</label>
+                <div class="">
+                  <select id = "C7" style="width: 300px;background-color: yellow">
+                    <option>REC 370</option>
+                    <option>Mission 345</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: flex;margin-top: 15px;">
+                <label for="C8" style="width: 50%;
+                text-align: center;">Select Battery </label>
+                <div class="">
+                  <select id = "C7" style="width: 300px;background-color: yellow">
+                    <option>No Battery</option>
+                    <option>Enphase 3kw</option>
+                    <option>Enphase 10kw</option>
+                    <option>Panasonic 11kw</option>
+                    <option>Panasonic 17kw</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: flex;margin-top: -13px;">
+                <label for="C9" style="width: 50%;
+                text-align: center;margin-top: 25px;">Enter System Size in watts</label>
+                <div class="mdl-textfield mdl-js-textfield" >
+                  <input class="mdl-textfield__input" type="text" id="C9" style="background-color: yellow">
+                  <label class="mdl-textfield__label" for="C9">System Price without Dealer Fee  </label>
+                </div>
+              </div>
+              <div style="display: flex;margin-top: -25px;">
+                <label for="C10" style="width: 50%;
+                text-align: center;margin-top: 25px;">Contract Price from Sighten Proposal</label>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="C10" style="background-color: yellow">
+                  <label class="mdl-textfield__label" for="C10">System Price without Dealer Fee  </label>
+                </div>
+              </div>
+              <div style="display: flex;">
+                <label for="C11" style="width: 50%;
+                text-align: center;">Select Dealer Fee</label>
+                <div class="">
+                  <select id = "C11" style="width: 300px;background-color: yellow">
+                    <option>20%</option>
+                    <option>22.5%</option>
+                    <option>24%</option>
+                    <option>24.5%</option>
+                    <option>25%</option>
+                    <option>25.5%</option>
+                    <option>30%</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: flex;margin-top: -12px;">
+                <label for="C12" style="width: 50%;
+                text-align: center;margin-top: 25px;">System Price without Dealer Fee</label>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="C12">
+                  <label class="mdl-textfield__label" for="C12">System Price without Dealer Fee  </label>
+                </div>
+              </div>
+              <div style="display: flex;    margin-top: -12px;">
+                <label for="C13" style="width: 50%;
+                text-align: center;margin-top: 25px;">Solar Insure Adder (automatic) </label>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="C13">
+                  <label class="mdl-textfield__label" for="C13">Solar Insure Adder (automatic) </label>
+                </div>
+              </div>
+              <div style="display: flex;    margin-top: -12px;">
+                <label for="C14" style="width: 50%;
+                text-align: center;margin-top: 25px;">Battery Price </label>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="C14">
+                  <label class="mdl-textfield__label" for="C14">Battery Price  </label>
+                </div>
+              </div>
+              <div style="display: flex;    margin-top: -12px;">
+                <label for="C15" style="width: 50%;
+                text-align: center;margin-top: 25px;">Total of ALL Adders </label>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="C15" style="background-color: yellow">
+                  <label class="mdl-textfield__label" for="C15">Total of ALL Adders  </label>
+                </div>
+              </div>
+              <div style="display: flex;    margin-top: -12px;">
+                <label for="C16" style="width: 50%;
+                text-align: center;margin-top: 25px;">System Price (This is the Solar Portion only) </label>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" id="C16">
+                  <label class="mdl-textfield__label" for="C16">System Price (This is the Solar Portion only)  </label>
+                </div>
+              </div>
+              <div style="display: flex;">
+                <label for="C17" style="width: 50%;
+                text-align: center;">Battery (Yes/No)</label>
+                <div class="">
+                  <select id = "C17" style="width: 300px;">
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="mdl-card__supporting-text">
+            </div>
+            <div class="mdl-card__actions">
+            </div>
+          </div>
+          <div class="mdl-card mdl-shadow--4dp" style="width: 30%;
+          margin-left: 5%;
+          margin-top: 1%;">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text">YOUR COMMISSION Calculator</h2>
+            </div>
+            <div class="mdl-card__media">
+            </div>
+            <div class="mdl-card__supporting-text">
+            The Sky Tower is an observation and telecommunications tower located in Auckland,
+            </div>
+            <div class="mdl-card__actions">
+            </div>
+          </div>
+        </div>
       </div>
       <div class="mdl-tabs__panel" id="guide">
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">

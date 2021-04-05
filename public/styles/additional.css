@@ -1,3 +1,28 @@
 a:hover {
     text-decoration: none;
 }
+
+.demo-card-wide.mdl-card {
+    width: 512px;
+    margin-top: 2em;
+}
+.demo-card-wide > .mdl-card__title {
+    color: #fff;
+    height: 176px;
+    background: url('https://getmdl.io/assets/demos/welcome_card.jpg') center / cover;
+}
+.demo-card-wide > .mdl-card__menu {
+    color: #fff;
+}
+
+.demo-list-action {
+    width: 300px;
+}
+
+.mdl-layout {
+    overflow-y: hidden;
+}
+
+#guide .page-content > div {
+    display: none;
+}

@@ -198,4 +198,10 @@ main, #messages-card {
   top: -1px;
   margin-right: 5px;
 }
+input {
+  text-align: center!important;
+}
+select {
+  text-align-last: center!important;
+}
 

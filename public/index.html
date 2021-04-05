@@ -39,7 +39,7 @@
         </div>
       </div>
     </header>
-    <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+    <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect maincontent" style="display: none;">
       <div class="mdl-tabs__tab-bar">
         <a href="#calculator" class="mdl-tabs__tab is-active">Calculator</a>
         <a href="#formulas" class="mdl-tabs__tab">Formulas</a>
@@ -47,7 +47,7 @@
         <a href="#guide" class="mdl-tabs__tab">Guide</a>
       </div>
       
-      <div class="mdl-tabs__panel is-active" id="calculator" style="">
+      <div class="mdl-tabs__panel is-active" id="calculator" >
         <div style="display: flex;">
           <div class="mdl-card mdl-shadow--4dp" style="width: 45%;
           margin-left: 10%;
@@ -60,7 +60,7 @@
                 <label for="C5" style="width: 50%;
                 text-align: center;">Select Sales Rep Status level (see next Tab) </label>
                 <div class="">
-                  <select id = "C5" style="width: 300px;background-color: yellow">
+                  <select class="custom-select" id = "C5" style="width: 300px;background-color: yellow">
                     <option>Bronze</option>
                     <option>Silver</option>
                     <option>Chairman's Club</option>
@@ -71,7 +71,7 @@
                 <label for="C6" style="width: 50%;
                 text-align: center;">Select SelfGen Lead </label>
                 <div class="">
-                  <select id = "C6" style="width: 300px;background-color: yellow">
+                  <select class="custom-select" id = "C6" style="width: 300px;background-color: yellow">
                     <option>Self</option>
                     <option>Company</option>
                   </select>
@@ -81,7 +81,7 @@
                 <label for="C7" style="width: 50%;
                 text-align: center;">Select Module</label>
                 <div class="">
-                  <select id = "C7" style="width: 300px;background-color: yellow">
+                  <select class="custom-select" id = "C7" style="width: 300px;background-color: yellow">
                     <option>REC 370</option>
                     <option>Mission 345</option>
                   </select>
@@ -91,7 +91,7 @@
                 <label for="C8" style="width: 50%;
                 text-align: center;">Select Battery </label>
                 <div class="">
-                  <select id = "C7" style="width: 300px;background-color: yellow">
+                  <select class="custom-select" id = "C8" style="width: 300px;background-color: yellow">
                     <option>No Battery</option>
                     <option>Enphase 3kw</option>
                     <option>Enphase 10kw</option>
@@ -105,7 +105,7 @@
                 text-align: center;margin-top: 25px;">Enter System Size in watts</label>
                 <div class="mdl-textfield mdl-js-textfield" >
                   <input class="mdl-textfield__input" type="text" id="C9" style="background-color: yellow">
-                  <label class="mdl-textfield__label" for="C9">System Price without Dealer Fee  </label>
+                  <label class="mdl-textfield__label" for="C9"></label>
                 </div>
               </div>
               <div style="display: flex;margin-top: -25px;">
@@ -113,14 +113,14 @@
                 text-align: center;margin-top: 25px;">Contract Price from Sighten Proposal</label>
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="text" id="C10" style="background-color: yellow">
-                  <label class="mdl-textfield__label" for="C10">System Price without Dealer Fee  </label>
+                  <label class="mdl-textfield__label" for="C10"></label>
                 </div>
               </div>
               <div style="display: flex;">
                 <label for="C11" style="width: 50%;
                 text-align: center;">Select Dealer Fee</label>
                 <div class="">
-                  <select id = "C11" style="width: 300px;background-color: yellow">
+                  <select class="custom-select" id = "C11" style="width: 300px;background-color: yellow">
                     <option>20%</option>
                     <option>22.5%</option>
                     <option>24%</option>
@@ -136,7 +136,7 @@
                 text-align: center;margin-top: 25px;">System Price without Dealer Fee</label>
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="text" id="C12">
-                  <label class="mdl-textfield__label" for="C12">System Price without Dealer Fee  </label>
+                  <label class="mdl-textfield__label" for="C12"></label>
                 </div>
               </div>
               <div style="display: flex;    margin-top: -12px;">
@@ -144,7 +144,7 @@
                 text-align: center;margin-top: 25px;">Solar Insure Adder (automatic) </label>
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="text" id="C13">
-                  <label class="mdl-textfield__label" for="C13">Solar Insure Adder (automatic) </label>
+                  <label class="mdl-textfield__label" for="C13"></label>
                 </div>
               </div>
               <div style="display: flex;    margin-top: -12px;">
@@ -152,7 +152,7 @@
                 text-align: center;margin-top: 25px;">Battery Price </label>
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="text" id="C14">
-                  <label class="mdl-textfield__label" for="C14">Battery Price  </label>
+                  <label class="mdl-textfield__label" for="C14"></label>
                 </div>
               </div>
               <div style="display: flex;    margin-top: -12px;">
@@ -160,7 +160,7 @@
                 text-align: center;margin-top: 25px;">Total of ALL Adders </label>
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="text" id="C15" style="background-color: yellow">
-                  <label class="mdl-textfield__label" for="C15">Total of ALL Adders  </label>
+                  <label class="mdl-textfield__label" for="C15"></label>
                 </div>
               </div>
               <div style="display: flex;    margin-top: -12px;">
@@ -168,14 +168,14 @@
                 text-align: center;margin-top: 25px;">System Price (This is the Solar Portion only) </label>
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="text" id="C16">
-                  <label class="mdl-textfield__label" for="C16">System Price (This is the Solar Portion only)  </label>
+                  <label class="mdl-textfield__label" for="C16"></label>
                 </div>
               </div>
               <div style="display: flex;">
                 <label for="C17" style="width: 50%;
                 text-align: center;">Battery (Yes/No)</label>
                 <div class="">
-                  <select id = "C17" style="width: 300px;">
+                  <select class="custom-select" id = "C17" style="width: 300px;">
                     <option>Yes</option>
                     <option>No</option>
                   </select>
@@ -190,13 +190,50 @@
           <div class="mdl-card mdl-shadow--4dp" style="width: 30%;
           margin-left: 5%;
           margin-top: 1%;">
-            <div class="mdl-card__title">
-              <h2 class="mdl-card__title-text">YOUR COMMISSION Calculator</h2>
+            <div class="mdl-card__title" style="margin:auto;margin-top:105px">
+              <h2 class="mdl-card__title-text">COMMISSION BREAKDOWN</h2>
             </div>
-            <div class="mdl-card__media">
+            <div class="" style="padding-right:50px;padding-left: 50px;">
+              <div style="display: flex;margin-top: 15px;">
+                <div style="width: 50%;text-align: center;"><label for="F5" >Select Cash Back to Customer</label></div>
+                <div class="" style="width: 50%;">
+                  <select class="custom-select" id = "F5" style="width: 200px;background-color: yellow">
+                    <option>0</option>
+                    <option>1000</option>
+                    <option>2000</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: flex;margin-top: 25px;">
+                <div style="width: 50%;text-align: center;margin-top: 25px;"><label for="F7" >BaseLine Commission</label></div>
+                <div class="mdl-textfield mdl-js-textfield" style="width:50%" >
+                  <input class="mdl-textfield__input" type="text" id="F7" style="width: 200px;">
+                  <label class="mdl-textfield__label" for="F7"  style="width: 200px;"></label>
+                </div>
+              </div>
+              <div style="display: flex;margin-top: -25px;">
+                <div style="width: 50%;text-align: center;margin-top: 25px;"><label for="F8" >Overrage Commission</label></div>
+                <div class="mdl-textfield mdl-js-textfield"  style="width:50%" >
+                  <input class="mdl-textfield__input" type="text" id="F8" style="width: 200px;">
+                  <label class="mdl-textfield__label" for="F8" style="width: 200px;"></label>
+                </div>
+              </div>
+              <div style="display: flex;margin-top: -12px;">
+                <div style="width: 50%;text-align: center;margin-top: 25px;margin-left: 23px;"><label for="F9" >Total Commission (Solar+Storage)</label></div>
+                <div class="mdl-textfield mdl-js-textfield" style="margin-left: 35px;">
+                  <input class="mdl-textfield__input" type="text" id="F9" style="width: 200px;background-color: green">
+                  <label class="mdl-textfield__label" for="F9"  style="width: 200px;"></label>
+                </div>
+              </div>
+              <div style="display: flex;    margin-top: -12px;">
+                <div style="width: 50%;text-align: center;margin-top: 25px;margin-left: 23px;"><label for="F10" >Total Commission (Solar+Storage)</label></div>
+                <div class="mdl-textfield mdl-js-textfield" style="margin-left: 35px;">
+                  <input class="mdl-textfield__input" type="text" id="F10" style="width: 200px;">
+                  <label class="mdl-textfield__label" for="F10"  style="width: 200px;"></label>
+                </div>
+              </div>
             </div>
             <div class="mdl-card__supporting-text">
-            The Sky Tower is an observation and telecommunications tower located in Auckland,
             </div>
             <div class="mdl-card__actions">
             </div>
@@ -241,12 +278,9 @@
         </div>
       </div>
       <div class="mdl-tabs__panel" id="formulas">
-        <ul>
-          <li>Tywin</li>
-          <li>Cersei</li>
-          <li>Jamie</li>
-          <li>Tyrion</li>
-        </ul>
+        <div class="default" id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+          <div id="grid"></div>
+        </div>
       </div>
       <div class="mdl-tabs__panel" id="users">
         <div class="demo-list-action mdl-list">
@@ -276,9 +310,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="default" id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
-      <div id="grid"></div>
-    </div> -->
+</div>
   </div>
   
   <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
@@ -319,7 +351,6 @@
   <script type="text/javascript" src="plugins/jqxgrid/js/jqxgrid.selection.js"></script> 
   <script type="text/javascript" src="plugins/jqxgrid/js/demos.js"></script>
   <script src="scripts/main.js"></script>
-  <script src="scripts/core.js"></script>
   <script src="scripts/additional.js"></script>
 </body>
 </html>

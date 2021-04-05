@@ -16,14 +16,34 @@
  'use strict';
 //  google.load("search", "1");
  // Signs-in Friendly Chat.
+ var realTimeData = {A5:null,A6:null,B5:null,B6:null,D5:null,D6:null,F5:null,F6:null,J12:null,J13:null,R3:null,T11:null};
+ var realCalcData = {email:null,C5:null,C6:null,C7:null,C8:null,C9:null,C10:null,C11:null,C12:null,C13:null,C14:null,C15:null,C16:null,C17:null,F5:null,F7:null,F8:null,F9:null,F10:null};
+ var calcData = {C5:null,C6:null,C7:null,C8:null,C9:null,C10:null,C11:null,C12:null,C13:null,C14:null,C15:null,C16:null,C17:null,F5:null};
+ var userEmail;
+ var authFlag = false;
  function signIn() {
    // Sign into Firebase using popup auth & Google as the identity provider.
    var provider = new firebase.auth.GoogleAuthProvider();
    firebase.auth().signInWithPopup(provider).then(result => {
        if(!!result)
        {
-          core();
-         localStorage.setItem("auth",firebase.auth().currentUser.displayName);
+          // core();
+         localStorage.setItem("auth",firebase.auth().currentUser.email);
+         userEmail = firebase.auth().currentUser.email;
+         $('.maincontent').show();
+
+         initial();
+         if(firebase.auth().currentUser.email == "onethink0116@gmail.com"){
+          authFlag = !authFlag;
+          $('a[href="#calculator"]').removeClass('is-active');
+          $('#calculator').removeClass('is-active');
+          $('a[href="#formulas"]').addClass('is-active');
+          $('#formulas').addClass('is-active');
+            core();
+        }else{
+          $('a[href="#formulas"]').hide();
+          $('a[href="#users"]').hide();
+        }
        }
    });
 
@@ -34,7 +54,8 @@
    // TODO 2: Sign out of Firebase.
    // Sign out of Firebase.
   firebase.auth().signOut();
-  localStorage.removeItem("auth")
+  localStorage.removeItem("auth");
+  $('.maincontent').hide();
   location.reload();
  }
  
@@ -61,60 +82,12 @@
    // TODO 6: Return true if a user is signed-in.
    return !!firebase.auth().currentUser;
  }
- 
- // Saves a new message on the Firebase DB.
- function saveMessage(messageText) {
-   // TODO 7: Push a new message to Firebase.
- }
- 
- // Loads chat messages history and listens for upcoming ones.
- function loadMessages() {
-   // TODO 8: Load and listens for new messages.
- }
- 
- // Saves a new message containing an image in Firebase.
- // This first saves the image in Firebase storage.
- function saveImageMessage(file) {
-   // TODO 9: Posts a new image as a message.
- }
- 
- // Saves the messaging device token to the datastore.
- function saveMessagingDeviceToken() {
-   // TODO 10: Save the device token in the realtime datastore
-   // Saves the messaging device token to the datastore.
-  // firebase.messaging().getToken().then(function(currentToken) {
-  //   if (currentToken) {
-  //     console.log('Got FCM device token:', currentToken);
-  //     // Saving the Device Token to the datastore.
-  //     firebase.firestore().collection('fcmTokens').doc(currentToken)
-  //         .set({uid: firebase.auth().currentUser.uid});
-  //   } else {
-  //     // Need to request permissions to show notifications.
-  //     requestNotificationsPermissions();
-  //   }
-  // }).catch(function(error){
-  //   console.error('Unable to get messaging token.', error);
-  // });
- }
- 
- // Requests permissions to show notifications.
- function requestNotificationsPermissions() {
-   // TODO 11: Request permissions to send notifications.
-   // Requests permission to show notifications.
-  // console.log('Requesting notifications permission...');
-  // firebase.messaging().requestPermission().then(function() {
-  //   // Notification permission granted.
-  //   saveMessagingDeviceToken();
-  // }).catch(function(error) {
-  //   console.error('Unable to get permission to notify.', error);
-  // });
- }
- 
   
  // Triggers when the auth state change for instance when the user signs-in or signs-out.
  function authStateObserver(user) {
    if (user) { // User is signed in!
      // Get the signed-in user's profile pic and name.
+     
      var profilePicUrl = getProfilePicUrl();
      var userName = getUserName();
  
@@ -129,10 +102,9 @@
  
      // Hide sign-in button.
      signInButtonElement.setAttribute('hidden', 'true');
-    
+
     //  grid();
      // We save the Firebase Messaging Device token and enable notifications.
-     saveMessagingDeviceToken();
    } else { // User is signed out!
      // Hide user's profile and sign-out button.
      userNameElement.setAttribute('hidden', 'true');
@@ -185,61 +157,83 @@
 //  loadMessages();
 if(localStorage.getItem("auth"))
 {
-  core();
+    userEmail = localStorage.getItem("auth");
+    $('.maincontent').show();
+    initial();
+    if(userEmail == "onethink0116@gmail.com")
+    {
+      $('a[href="#calculator"]').removeClass('is-active');
+      $('#calculator').removeClass('is-active');
+      $('a[href="#formulas"]').addClass('is-active');
+      $('#formulas').addClass('is-active');
+      core();
+    }
 }
 function core(){
-  // var calcRef = firebase.database().ref('CALCULATOR');
-  // calcRef.on('value', (snapshot) => {
-  //   const data = snapshot.val();
-  //   var calcData = {};
-  //   calcData.C5 = data[4][2];
-  //   calcData.C6 = data[5][2];
-  //   calcData.C7 = data[6][2];
-  //   calcData.C8 = data[7][2];
-  //   calcData.C9 = data[8][2];
-  //   calcData.C10 = data[9][2];
-  //   calcData.C11 = data[10][2];
-  //   calcData.C12 = data[11][2];
-  //   calcData.C13 = data[12][2];
-  //   calcData.C14 = data[13][2];
-  //   calcData.C15 = data[14][2];
-  //   calcData.C16 = data[15][2];
-  //   calcData.C17 = data[16][2];
-  //   calcData.F5 = data[4][5];
-  //   $("#grid").html();
-  //   $("#grid").off("cellendedit");
-    // grid(calcData);
-    // console.log("calc changed",calcData)
-  // });
+  firebase.firestore().collection("CALCULATOR").where("email","==",userEmail)
+            .get()
+            .then((querySnapshot) => {
+                var docs = querySnapshot.docs;
+                if(docs.length > 0) //update documentation
+                {
+                  querySnapshot.forEach((doc) => {
+                    calcData.C5 = doc.data().C5;
+                    calcData.C6 = doc.data().C6;
+                    calcData.C7 = doc.data().C7;
+                    calcData.C8 = doc.data().C8;
+                    calcData.C9 = doc.data().C9;
+                    calcData.C10 = doc.data().C10;
+                    calcData.C11 = doc.data().C11;
+                    calcData.C12 = doc.data().C12;
+                    calcData.C13 = doc.data().C13;
+                    calcData.C14 = doc.data().C14;
+                    calcData.C15 = doc.data().C15;
+                    calcData.C16 = doc.data().C16;
+                    calcData.C17 = doc.data().C17;
+                    calcData.F5 = doc.data().F5;
+                    $("#grid").html();
+                    $("#grid").off("cellendedit");
+                    grid(calcData);
+                  })
+                }
+                else //add documentation
+                {
+                  
+                }
+            })
+           
 }
 function grid(calcData){
       // prepare the data
       var data = new Array();
-      var calcRef = firebase.database().ref('FORMULAS');
-      firebase.firestore().collection("FORMULAS").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            var length = 20;
-            for(var i = 0;i < length;i++)
-            {
-              data[i] = doc.data()[i]
-            }
-            // doc.data() is never undefined for query doc snapshots
-        });
-        if(data.length == 0)
-        {
-            var row = {};
-            for(var i = 0; i < 20;i++)
-            {
-              row = {};
-              row.no = i + 1;
-              for(var j = 0;j < 26;j++)
+      var flag = false;
+      firebase.firestore().collection("FORMULAS")
+      .get()
+      .then((querySnapshot) => {
+          var docs = querySnapshot.docs;
+          if(docs.length > 0) //update documentation
+          {
+            querySnapshot.forEach((doc) => {
+              var length = 20;
+              for(var i = 0;i < length;i++)
               {
-                var key = String.fromCharCode(65 + j);
-                row[key] = "";
+                data[i] = doc.data()[i];
               }
-              data.push(row);
+              flag = true;
+            })
+          }
+          else //add documentation
+          {
+            row = {};
+            row.no = i + 1;
+            for(var j = 0;j < 26;j++)
+            {
+              var key = String.fromCharCode(65 + j);
+              row[key] = "";
             }
-        }
+            data.push(row);
+          }
+          
         var datafields = [{ name: 'no', type:"number"}];
         var datafieldTemp = {};
         for(var i = 0; i < 26; i++)
@@ -256,9 +250,6 @@ function grid(calcData){
             datafields: datafields,
             datatype: "array",
             updaterow: function (rowid, rowdata, commit) {
-              // synchronize with the server - send update command
-              // call commit with parameter true if the synchronization with the server is successful 
-              // and with parameter false if the synchronization failder.
               commit(true);
           },
         };
@@ -295,22 +286,14 @@ function grid(calcData){
               columnsresize: true,
               columns: columns
           });
-        calc(null,calcData)
-      });
-      
-      // events
-      // $("#grid").on('cellbeginedit', function (event) {
-      //   var args = event.args;
-      //   console.log("start");
-      //   $("#cellbegineditevent").text("Event Type: cellbeginedit, Column: " + args.datafield + ", Row: " + (1 + args.rowindex) + ", Value: " + args.value);
-      // });
-
+          if(flag) calc(null,calcData,null,authFlag)
+      })
       $("#grid").on('cellendedit', function (event) {
           var args = event.args;
           // console.log("args.datafield",args.datafield);
           // console.log("Row:",(1 + args.rowindex));
           // console.log("Value",args.value);
-          calc(args,calcData);
+          calc(args,calcData,null,authFlag);
           var totalData = {};
           for(var i = 0;i < 20;i++){
             var rowData = $('#grid').jqxGrid('getrowdata', i);
@@ -319,82 +302,101 @@ function grid(calcData){
             saveData[args.datafield] = args.value;
             totalData[i] = saveData;
           }
+          
           firebase.firestore().collection("FORMULAS")
             .get()
             .then((querySnapshot) => {
-                var docs = querySnapshot.docs;
-                if(docs.length > 0) //update documentation
-                {
-                  firebase.firestore().collection("FORMULAS").doc(docs[0].id).update(totalData).then(() => {
-                      console.log("Document successfully update!");
-                  }).catch((error) => {
-                      console.error("Error removing document: ", error);
-                  });
-                }
-                else //add documentation
-                {
-                  return firebase.firestore().collection('FORMULAS').add(totalData).catch(function(error) {
-                    console.error('Error writing new message to database', error);
-                  });
-                }
-            })
-            .catch((error) => {
-                console.log("Error getting documents: ", error);
-            });
+              var docs = querySnapshot.docs;
+              if(docs.length > 0) //update documentation
+              {
+                firebase.firestore().collection("FORMULAS").doc(docs[0].id).update(totalData).then(() => {
+                    console.log("FORMULAS Document successfully update!");
+                })
+              }
+              else //add documentation
+              {
+                return firebase.firestore().collection('FORMULAS').add(totalData);
+              }
+          })
+          
+          var cellRef = args.datafield + (1 + args.rowindex).toString();
+          if(realTimeData.hasOwnProperty(cellRef)){
+            var obj = {};
+            obj[cellRef] = args.value;
+              var formulascRef = firebase.database().ref('MINIFORMULAS');
+              formulascRef.update(obj);
+          }
       });
 }
-function calc(args,calcData)
+function calc(args,calcData,formulasData,authFlag)
 {
   var A5,A6,B5,B6,D5,D6,F5,F6,J12,J13,R3,T11;
-  A5 = parseFloat($('#grid').jqxGrid('getcellvalue', 4, "A").split("$")[1]);
-  A6 = parseFloat($('#grid').jqxGrid('getcellvalue', 5, "A").split("$")[1]);
-  B5 = parseFloat($('#grid').jqxGrid('getcellvalue', 4, "B").split("$")[1]);
-  B6 = parseFloat($('#grid').jqxGrid('getcellvalue', 5, "B").split("$")[1]);
-  D5 = parseFloat($('#grid').jqxGrid('getcellvalue', 4, "D").split("$")[1]);
-  D6 = parseFloat($('#grid').jqxGrid('getcellvalue', 5, "D").split("$")[1]);
-  F5 = $('#grid').jqxGrid('getcellvalue', 4, "F");
-  F6 = $('#grid').jqxGrid('getcellvalue', 5, "F");
-  J12 = parseFloat($('#grid').jqxGrid('getcellvalue', 11, "J").split("$")[1]);
-  J13 = parseFloat($('#grid').jqxGrid('getcellvalue', 12, "J").split("$")[1]);
-  R3 = parseFloat($('#grid').jqxGrid('getcellvalue', 2, "J").split("%")[0]);
-  T11 = parseFloat($('#grid').jqxGrid('getcellvalue', 10, "T").split("%")[0]);
-  if(args)
+  if(authFlag)
   {
-    if(args.datafield == "A")
+    A5 = parseFloat($('#grid').jqxGrid('getcellvalue', 4, "A").split("$")[1]);
+    A6 = parseFloat($('#grid').jqxGrid('getcellvalue', 5, "A").split("$")[1]);
+    B5 = parseFloat($('#grid').jqxGrid('getcellvalue', 4, "B").split("$")[1]);
+    B6 = parseFloat($('#grid').jqxGrid('getcellvalue', 5, "B").split("$")[1]);
+    D5 = parseFloat($('#grid').jqxGrid('getcellvalue', 4, "D").split("$")[1]);
+    D6 = parseFloat($('#grid').jqxGrid('getcellvalue', 5, "D").split("$")[1]);
+    F5 = $('#grid').jqxGrid('getcellvalue', 4, "F");
+    F6 = $('#grid').jqxGrid('getcellvalue', 5, "F");
+    J12 = parseFloat($('#grid').jqxGrid('getcellvalue', 11, "J").split("$")[1]);
+    J13 = parseFloat($('#grid').jqxGrid('getcellvalue', 12, "J").split("$")[1]);
+    R3 = parseFloat($('#grid').jqxGrid('getcellvalue', 2, "J").split("%")[0]);
+    T11 = parseFloat($('#grid').jqxGrid('getcellvalue', 10, "T").split("%")[0]);
+    if(args)
     {
-      if(1 + args.rowindex == 5) A5 = parseFloat(args.value.split("$")[1]);
-      else if(1 + args.rowindex == 6) A6 = parseFloat(args.value.split("$")[1]);
+      if(args.datafield == "A")
+      {
+        if(1 + args.rowindex == 5) A5 = parseFloat(args.value.split("$")[1]);
+        else if(1 + args.rowindex == 6) A6 = parseFloat(args.value.split("$")[1]);
+      }
+      if(args.datafield == "B")
+      {
+        if(1 + args.rowindex == 5) B5 = parseFloat(args.value.split("$")[1]);
+        else if(1 + args.rowindex == 6) B6 = parseFloat(args.value.split("$")[1]);
+      }
+      if(args.datafield == "D")
+      {
+        if(1 + args.rowindex == 5) D5 = parseFloat(args.value.split("$")[1]);
+        else if(1 + args.rowindex == 6) D6 = parseFloat(args.value.split("$")[1]);
+      }
+      if(args.datafield == "F")
+      {
+        if(1 + args.rowindex == 5) F5 = args.value;
+        else if(1 + args.rowindex == 6) F6 = args.value;
+      }
+      if(args.datafield == "J")
+      {
+        if(1 + args.rowindex == 12) J12 = parseFloat(args.value.split("$")[1]);
+        else if(1 + args.rowindex == 13) J13 = parseFloat(args.value.split("$")[1]);
+      }
+      if(args.datafield == "R")
+      {
+        if(1 + args.rowindex == 3) R3 = parseFloat(args.value.split("%")[0]);
+      }
+      if(args.datafield == "T")
+      {
+        if(1 + args.rowindex == 11) T11 = parseFloat(args.value.split("%")[0]);
+      }
     }
-    if(args.datafield == "B")
-    {
-      if(1 + args.rowindex == 5) B5 = parseFloat(args.value.split("$")[1]);
-      else if(1 + args.rowindex == 6) B6 = parseFloat(args.value.split("$")[1]);
-    }
-    if(args.datafield == "D")
-    {
-      if(1 + args.rowindex == 5) D5 = parseFloat(args.value.split("$")[1]);
-      else if(1 + args.rowindex == 6) D6 = parseFloat(args.value.split("$")[1]);
-    }
-    if(args.datafield == "F")
-    {
-      if(1 + args.rowindex == 5) F5 = args.value;
-      else if(1 + args.rowindex == 6) F6 = args.value;
-    }
-    if(args.datafield == "J")
-    {
-      if(1 + args.rowindex == 12) J12 = parseFloat(args.value.split("$")[1]);
-      else if(1 + args.rowindex == 13) J13 = parseFloat(args.value.split("$")[1]);
-    }
-    if(args.datafield == "R")
-    {
-      if(1 + args.rowindex == 3) R3 = parseFloat(args.value.split("%")[0]);
-    }
-    if(args.datafield == "T")
-    {
-      if(1 + args.rowindex == 11) T11 = parseFloat(args.value.split("%")[0]);
-    }
+  }else{
+    // console.log(formulasData.A5);
+    A5 = parseFloat(formulasData.A5.split("$")[1]);
+    A6 = parseFloat(formulasData.A6.split("$")[1]);
+    B5 = parseFloat(formulasData.B5.split("$")[1]);
+    B6 = parseFloat(formulasData.B6.split("$")[1]);
+    D5 = parseFloat(formulasData.D5.split("$")[1]);
+    D6 = parseFloat(formulasData.D6.split("$")[1]);
+    F5 = formulasData.F5;
+    F6 = formulasData.F6;
+    J12 = parseFloat(formulasData.J12.split("$")[1]);
+    J13 = parseFloat(formulasData.J13.split("$")[1]);
+    R3 = parseFloat(formulasData.R3.split("%")[0]);
+    T11 = parseFloat(formulasData.T11.split("%")[0]);
   }
-  
+ 
   //C5,C6
   var C5,dip_C5;
   C5 = B5 / A5 * 100;
@@ -402,8 +404,11 @@ function calc(args,calcData)
   var C6,dip_C6;
   C6 = B6 / A6 * 100;
   dip_C6 = Math.round((B6 / A6*1000))/10
-  $("#grid").jqxGrid('setcellvalue', 4, "C", dip_C5.toString() + "%");
-  $("#grid").jqxGrid('setcellvalue', 5, "C", dip_C6.toString() + "%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "C", dip_C5.toString() + "%");
+    $("#grid").jqxGrid('setcellvalue', 5, "C", dip_C6.toString() + "%");
+  }
+
   //E5,E6
   var E5,dip_E5;
   E5 = (D5+B5)/((A5/0.8)) * 100;
@@ -411,18 +416,27 @@ function calc(args,calcData)
   var E6,dip_E6;
   E6 = (D6+B6)/((A6/0.8)) * 100
   dip_E6 = Math.round((  (D6+B6)/((A6/0.8))  *1000))/10;
-  $("#grid").jqxGrid('setcellvalue', 4, "E", dip_E5.toString() + "%");
-  $("#grid").jqxGrid('setcellvalue', 5, "E", dip_E6.toString() + "%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "E", dip_E5.toString() + "%");
+    $("#grid").jqxGrid('setcellvalue', 5, "E", dip_E6.toString() + "%");
+  }
+
   //I5,I6
   var I5 = A5;
   var I6 = A6;
-  $("#grid").jqxGrid('setcellvalue', 4, "I", "$"+A5.toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "I", "$"+A6.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "I", "$"+A5.toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "I", "$"+A6.toString());
+  }
+
   //H5,H6
   var H5 = calcData.C9;
   var H6 = calcData.C9;
-  $("#grid").jqxGrid('setcellvalue', 4, "H", H5.toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "H", H6.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "H", H5.toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "H", H6.toString());
+  }
+
   //I7,I8      
   var I7,dip_I7;
   I7 = I5/(1-calcData.C11);
@@ -430,14 +444,20 @@ function calc(args,calcData)
   var I8,dip_I8;
   I8 = I6/(1-calcData.C11);
   dip_I8 = Math.round((  I6/(1-calcData.C11)  *100))/100;
-  $("#grid").jqxGrid('setcellvalue', 6, "I", "$"+dip_I7.toString());
-  $("#grid").jqxGrid('setcellvalue', 7, "I", "$"+dip_I8.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 6, "I", "$"+dip_I7.toString());
+    $("#grid").jqxGrid('setcellvalue', 7, "I", "$"+dip_I8.toString());
+  }
+
   //J3
   var J3;
   if(calcData.F5 == 0) J3 = 0;
   else if(calcData.F5 == 1000) J3 = 12;
   else if(calcData.F5 == 2000) J3 = 22.5;
-  $("#grid").jqxGrid('setcellvalue', 2, "J", J3.toString()+"%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 2, "J", J3.toString()+"%");
+  }
+
   //J5,J6,J7,J8
   var J5,dip_J5,J6,dip_J6,J7,dip_J7,J8,dip_J8;
   if(J3 == 0) {
@@ -450,7 +470,10 @@ function calc(args,calcData)
     J5 = I5/(1-J3/100);
   }
   dip_J5 = Math.round(J5 *100)/100;
-  $("#grid").jqxGrid('setcellvalue', 4, "J", "$"+dip_J5.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "J", "$"+dip_J5.toString());
+  }
+
   if(J3 == 0) {
     if((calcData.C16/calcData.C9) < J13){
       J6 = calcData.C16/calcData.C9;
@@ -461,46 +484,67 @@ function calc(args,calcData)
     J6 = I6/(1-J3/100);
   }
   dip_J6 = Math.round(J6 *100)/100;
-  $("#grid").jqxGrid('setcellvalue', 5, "J", "$"+dip_J6.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 5, "J", "$"+dip_J6.toString());
+  }
+
   J7 = J5/(1-calcData.C11);
   dip_J7 = Math.round(J5/(1-calcData.C11)*100)/100;
   J8 = J6/(1-calcData.C11);
   dip_J8 = Math.round(J6/(1-calcData.C11)*100)/100;
-  $("#grid").jqxGrid('setcellvalue', 6, "J", "$"+dip_J7.toString());
-  $("#grid").jqxGrid('setcellvalue', 7, "J", "$"+dip_J8.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 6, "J", "$"+dip_J7.toString());
+    $("#grid").jqxGrid('setcellvalue', 7, "J", "$"+dip_J8.toString());
+  }
+
   //K5,K6
   var K5,K6;
   K5=I5*H5;
   K6=I6*H6;
-  $("#grid").jqxGrid('setcellvalue', 4, "K", "$"+K5.toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "K", "$"+K6.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "K", "$"+K5.toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "K", "$"+K6.toString());
+  }
+
   //L5.L6
   var L5,L6;
   L5=J5*H5;
   L6=J6*H6;
-  $("#grid").jqxGrid('setcellvalue', 4, "L", "$"+Math.round(L5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "L", "$"+Math.round(L6).toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "L", "$"+Math.round(L5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "L", "$"+Math.round(L6).toString());
+  }
+
   //M5,M6
   var M5,M6;
   if(L5-K5 > 0) M5 = L5-K5;
   else M5 = 0;
   if(L6-K6 > 0) M6 = L6-K6;
   else M6 = 0;
-  $("#grid").jqxGrid('setcellvalue', 4, "M", "$"+Math.round(M5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "M", "$"+Math.round(M6).toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "M", "$"+Math.round(M5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "M", "$"+Math.round(M6).toString());
+  }
+
   //N5,N6
   var N5,N6;
   if(J5 >= I5) N5 = B5 * H5;
   else N5 = 0;
   if(J6 >= I6) N6 = B6 * H6;
   else N6 = 0;
-  $("#grid").jqxGrid('setcellvalue', 4, "N", "$"+Math.round(N5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "N", "$"+Math.round(N6).toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "N", "$"+Math.round(N5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "N", "$"+Math.round(N6).toString());
+  }
+
   //O3 =IF(CALCULATOR!C6="Self","Y","N")
   var O3;
   if(calcData.C6 == "Self") O3 = "Y"
   else O3 = "N"
-  $("#grid").jqxGrid('setcellvalue', 2, "O", O3);
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 2, "O", O3);
+  }
+ 
   //O5,O6 =IF(+J5>=I5,IF($O$3="Y",D5*H5,0),0)
   var O5,O6;
   if(J5>=I5){
@@ -515,8 +559,11 @@ function calc(args,calcData)
   }else{
     O6 = 0;
   }
-  $("#grid").jqxGrid('setcellvalue', 4, "O", "$"+Math.round(O5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "O", "$"+Math.round(O6).toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "O", "$"+Math.round(O5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "O", "$"+Math.round(O6).toString());
+  }
+
   //P5,P6
   var P5,P6,P8,dip_P8,P9,dip_P9;
   P5 = N5+O5;
@@ -525,18 +572,24 @@ function calc(args,calcData)
   dip_P8 = Math.round(P8*100)/100;
   P9 = P6/H6;
   dip_P9 = Math.round(P9*100)/100;
-  $("#grid").jqxGrid('setcellvalue', 4, "P", "$"+Math.round(P5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "P", "$"+Math.round(P6).toString());
-  $("#grid").jqxGrid('setcellvalue', 7, "P", "$"+dip_P8.toString());
-  $("#grid").jqxGrid('setcellvalue', 8, "P", "$"+dip_P9.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "P", "$"+Math.round(P5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "P", "$"+Math.round(P6).toString());
+    $("#grid").jqxGrid('setcellvalue', 7, "P", "$"+dip_P8.toString());
+    $("#grid").jqxGrid('setcellvalue', 8, "P", "$"+dip_P9.toString());
+  }
+
   //Q5,Q6
   var Q5,dip_Q5,Q6,dip_Q6;
   Q5 = P5/K5 *100;
   dip_Q5 = Math.round(Q5*10)/10;
   Q6 = P6/K6 *100;
   dip_Q6 = Math.round(Q6*10)/10;
-  $("#grid").jqxGrid('setcellvalue', 4, "Q", dip_Q5.toString()+"%");
-  $("#grid").jqxGrid('setcellvalue', 5, "Q", dip_Q6.toString()+"%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "Q", dip_Q5.toString()+"%");
+    $("#grid").jqxGrid('setcellvalue', 5, "Q", dip_Q6.toString()+"%");
+  }
+ 
   //R5,R6 IF($J$3=0%,0,IF($J$3=12%,"$1000","$2000"))
   var R5,R6;
   if(J3 == 0) {R5 = 0;R6 = 0;}
@@ -544,8 +597,11 @@ function calc(args,calcData)
     if(J3 == 12) {R5 = 1000;R6 = 1000;}
     else {R5 = 2000;R6 = 2000;}
   }
-  $("#grid").jqxGrid('setcellvalue', 4, "R", "$"+R5.toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "R", "$"+R6.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "R", "$"+R5.toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "R", "$"+R6.toString());
+  }
+
   //T3 =IF(CALCULATOR!$C$5="Bronze",70%,IF(CALCULATOR!$C$5="Silver",60%,50%))
   var T3;
   if(calcData.C5 == "Bronze") T3 = 70;
@@ -553,15 +609,21 @@ function calc(args,calcData)
     if(calcData.C5 == "Silver") T3 = 60;
     else T3 = 50;
   }
-  $("#grid").jqxGrid('setcellvalue', 2, "T", T3.toString()+"%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 2, "T", T3.toString()+"%");
+  }
+
   //T12,T13 =$T$11*$M$5
   var T12,dip_T12,T13,dip_T13;
   T12 = T11/100*M5;
   dip_T12 = Math.round(T12*100)/100;
   T13 = T11/100*M6;
   dip_T13 = Math.round(T13*100)/100;
-  $("#grid").jqxGrid('setcellvalue', 11, "T", "$"+dip_T12.toString());
-  $("#grid").jqxGrid('setcellvalue', 12, "T", "$"+dip_T13.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 11, "T", "$"+dip_T12.toString());
+    $("#grid").jqxGrid('setcellvalue', 12, "T", "$"+dip_T13.toString());
+  }
+
   // S5,S6 =IF(R5=0,IF(M5-R5>=T12,M5-T12,0),M5-R5)
   var S5,S6;
   if(R5 == 0){
@@ -576,8 +638,11 @@ function calc(args,calcData)
   }else{
     S6 = M6 - R6;
   }
-  $("#grid").jqxGrid('setcellvalue', 4, "S", "$"+Math.round(S5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "S", "$"+Math.round(S6).toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "S", "$"+Math.round(S5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "S", "$"+Math.round(S6).toString());
+  }
+
   //T5,T6,T8,,T9,,T15,,T16,;
   var T5,T6,T8,dip_T8,T9,dip_T9,T15,dip_T15,T16,dip_T16;
   T5 =S5*T3/100;
@@ -590,12 +655,15 @@ function calc(args,calcData)
   dip_T15 = Math.round(T15*10000)/100
   T16=T6/M6;
   dip_T16 = Math.round(T16*10000)/100
-  $("#grid").jqxGrid('setcellvalue', 4, "T", "$"+Math.round(T5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "T", "$"+Math.round(T6).toString());
-  $("#grid").jqxGrid('setcellvalue', 7, "T", "$"+dip_T8.toString());
-  $("#grid").jqxGrid('setcellvalue', 8, "T", "$"+dip_T9.toString());
-  $("#grid").jqxGrid('setcellvalue', 14, "T", dip_T15.toString()+"%");
-  $("#grid").jqxGrid('setcellvalue', 15, "T", dip_T16.toString()+"%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "T", "$"+Math.round(T5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "T", "$"+Math.round(T6).toString());
+    $("#grid").jqxGrid('setcellvalue', 7, "T", "$"+dip_T8.toString());
+    $("#grid").jqxGrid('setcellvalue', 8, "T", "$"+dip_T9.toString());
+    $("#grid").jqxGrid('setcellvalue', 14, "T", dip_T15.toString()+"%");
+    $("#grid").jqxGrid('setcellvalue', 15, "T", dip_T16.toString()+"%");
+  }
+
   //U3,U5,U6,U15,U16
   var U3,U5,U6,U15,dip_U15,U16,dip_U16;
   U3 = 100 - T3;
@@ -605,26 +673,35 @@ function calc(args,calcData)
   dip_U15 = Math.round(U15*10000)/100;
   U16 = U6/M6;
   dip_U16 = Math.round(U16*10000)/100;
-  $("#grid").jqxGrid('setcellvalue', 2, "U", U3.toString()+"%");
-  $("#grid").jqxGrid('setcellvalue', 4, "U", "$"+Math.round(U5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "U", "$"+Math.round(U6).toString());
-  $("#grid").jqxGrid('setcellvalue', 14, "U", dip_U15.toString()+"%");
-  $("#grid").jqxGrid('setcellvalue', 15, "U", dip_U16.toString()+"%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 2, "U", U3.toString()+"%");
+    $("#grid").jqxGrid('setcellvalue', 4, "U", "$"+Math.round(U5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "U", "$"+Math.round(U6).toString());
+    $("#grid").jqxGrid('setcellvalue', 14, "U", dip_U15.toString()+"%");
+    $("#grid").jqxGrid('setcellvalue', 15, "U", dip_U16.toString()+"%");
+  }
+
   //V3,V5,V6
   var V3,dip_V3,V5,V6;
   V3=0.3+(H5-5100)*0.00001
   dip_V3 = Math.round(V3*100)/100;
   V5 = V3*H5+T5;
   V6 = V3*H6+T6;
-  $("#grid").jqxGrid('setcellvalue', 2, "V", "$"+dip_V3.toString());
-  $("#grid").jqxGrid('setcellvalue', 4, "V", "$"+Math.round(V5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "V", "$"+Math.round(V6).toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 2, "V", "$"+dip_V3.toString());
+    $("#grid").jqxGrid('setcellvalue', 4, "V", "$"+Math.round(V5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "V", "$"+Math.round(V6).toString());
+  }
+
   //W5,W6
   var W5,W6;
   W5=V5/(L5-R5) * 100;
   W6=V6/(L6-R6) * 100;
-  $("#grid").jqxGrid('setcellvalue', 4, "W", Math.round(W5).toString()+"%");
-  $("#grid").jqxGrid('setcellvalue', 5, "W", Math.round(W6).toString()+"%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "W", Math.round(W5).toString()+"%");
+    $("#grid").jqxGrid('setcellvalue', 5, "W", Math.round(W6).toString()+"%");
+  }
+
   //X5,X6
   var X5,X6,X8,dip_X8,X9,dip_X9;
   X5 = P5+U5;
@@ -633,24 +710,33 @@ function calc(args,calcData)
   dip_X8 = Math.round(X8*100)/100;
   X9 = X6/H6;
   dip_X9 = Math.round(X9*100)/100;
-  $("#grid").jqxGrid('setcellvalue', 4, "X", "$"+Math.round(X5).toString());
-  $("#grid").jqxGrid('setcellvalue', 5, "X", "$"+Math.round(X6).toString());
-  $("#grid").jqxGrid('setcellvalue', 7, "X", "$"+dip_X8.toString());
-  $("#grid").jqxGrid('setcellvalue', 8, "X", "$"+dip_X9.toString());
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "X", "$"+Math.round(X5).toString());
+    $("#grid").jqxGrid('setcellvalue', 5, "X", "$"+Math.round(X6).toString());
+    $("#grid").jqxGrid('setcellvalue', 7, "X", "$"+dip_X8.toString());
+    $("#grid").jqxGrid('setcellvalue', 8, "X", "$"+dip_X9.toString());
+  }
+
   //Y5,Y6
   var Y5,Y6,dip_Y5,dip_Y6;
   Y5=(P5+U5)/(L5-R5);
   Y6=(P6+U6)/(L6-R6);
   dip_Y5 = Math.round(Y5*1000)/10;
   dip_Y6 = Math.round(Y6*1000)/10;
-  $("#grid").jqxGrid('setcellvalue', 4, "Y", dip_Y5.toString()+"%");
-  $("#grid").jqxGrid('setcellvalue', 5, "Y", dip_Y6.toString()+"%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "Y", dip_Y5.toString()+"%");
+    $("#grid").jqxGrid('setcellvalue', 5, "Y", dip_Y6.toString()+"%");
+  }
+
   //Z5,Z6
   var Z5,Z6;
   Z5=X5/V5*100;
   Z6=X6/V6*100;
-  $("#grid").jqxGrid('setcellvalue', 4, "Z", Math.round(Z5).toString()+"%");
-  $("#grid").jqxGrid('setcellvalue', 5, "Z", Math.round(Z6).toString()+"%");
+  if(authFlag){
+    $("#grid").jqxGrid('setcellvalue', 4, "Z", Math.round(Z5).toString()+"%");
+    $("#grid").jqxGrid('setcellvalue', 5, "Z", Math.round(Z6).toString()+"%");
+  }
+
 
   //result   F7,F8,F9,F10
   var calc_F7,calc_F8,calc_F9,calc_F10;
@@ -669,9 +755,179 @@ function calc(args,calcData)
     if(J6 >= 3.3) calc_F10 = J6;
     else calc_F10="REFUSED <$3.30";
   }
-  console.log(calc_F7,calc_F8,calc_F9,calc_F10);
-  var calcRef = firebase.database().ref('CALCULATOR');
-  calcRef.update({
-    "nickname": "Amazing Grace"
-  });
+  // console.log(calc_F7,calc_F8,calc_F9,calc_F10);
+  realCalcData.F7 = Math.round(calc_F7);
+  realCalcData.F8 = Math.round(calc_F8);
+  realCalcData.F9 = Math.round(calc_F9);
+  realCalcData.F10 = Math.round(calc_F10*100)/100;
+  $("#F7").val(Math.round(calc_F7));
+  $("#F8").val(Math.round(calc_F8));
+  $("#F9").val(Math.round(calc_F9));
+  $("#F10").val(Math.round(calc_F10*100)/100);
+  // var calcRef = firebase.database().ref('CALCULATOR');
+  // calcRef.update({
+  //   "nickname": "Amazing Grace"
+  // });
 }
+function initial(){
+  // console.log(userEmail);
+  firebase.firestore().collection("CALCULATOR").where("email","==",userEmail)
+            .get()
+            .then((querySnapshot) => {
+                var docs = querySnapshot.docs;
+                
+                if(docs.length > 0) //update documentation
+                {
+                  querySnapshot.forEach((doc) => {
+                    calcData.C5 = realCalcData.C5 = doc.data().C5;
+                    calcData.C6 = realCalcData.C6 = doc.data().C6;
+                    calcData.C7 = realCalcData.C7 = doc.data().C7;
+                    calcData.C8 = realCalcData.C8 = doc.data().C8;
+                    calcData.C9 = realCalcData.C9 = doc.data().C9;
+                    calcData.C10 = realCalcData.C10 = doc.data().C10;
+                    calcData.C11 = realCalcData.C11 = doc.data().C11;
+                    calcData.C12 = realCalcData.C12 = doc.data().C12;
+                    calcData.C13 = realCalcData.C13 = doc.data().C13;
+                    calcData.C14 = realCalcData.C14 = doc.data().C14;
+                    calcData.C15 = realCalcData.C15 = doc.data().C15;
+                    calcData.C16 = realCalcData.C16 = doc.data().C16;
+                    calcData.C17 = realCalcData.C17 = doc.data().C17;
+                    calcData.F5 = realCalcData.F5 = doc.data().F5;
+                    realCalcData.F7 = doc.data().F7;
+                    realCalcData.F8 = doc.data().F8;
+                    realCalcData.F9 = doc.data().F9;
+                    realCalcData.F10 = doc.data().F10;
+                    $("#C5").val(realCalcData.C5);
+                    $("#C6").val(realCalcData.C6);
+                    $("#C7").val(realCalcData.C7);
+                    $("#C8").val(realCalcData.C8);
+                    $("#C9").val(realCalcData.C9);
+                    $("#C10").val(realCalcData.C10);
+                    $("#C11").val((realCalcData.C11*100).toString()+"%");
+                    $("#C12").val(realCalcData.C12);
+                    $("#C13").val(realCalcData.C13);
+                    $("#C14").val(realCalcData.C14);
+                    $("#C15").val(realCalcData.C15);
+                    $("#C16").val(realCalcData.C16);
+                    $("#C17").val(realCalcData.C17);
+                    $("#F5").val(realCalcData.F5);
+                    $("#F7").val(realCalcData.F7);
+                    $("#F8").val(realCalcData.F8);
+                    $("#F9").val(realCalcData.F9);
+                    $("#F10").val(realCalcData.F10);
+                  })
+                }
+                else //add documentation
+                {
+                  
+                }
+             realCalc();
+            })
+          
+}
+$("#C5").change(function(){
+  realCalc();
+})
+$("#C6").change(function(){
+  realCalc();
+})
+$("#C7").change(function(){
+  realCalc()
+})
+$("#C8").change(function(){
+  realCalc()
+})
+$("#C9").change(function(){
+  realCalc()
+})
+$("#C10").change(function(){
+  realCalc()
+})
+$("#C11").change(function(){
+  realCalc()
+})
+$("#C15").change(function(){
+  realCalc()
+})
+$("#C17").change(function(){
+  realCalc()
+})
+$("#F5").change(function(){
+  realCalc()
+})
+function realCalc(){
+  calcData.C5 = realCalcData.C5 = $("#C5").val();
+  calcData.C6 = realCalcData.C6 = $("#C6").val();
+  calcData.C7 = realCalcData.C7 = $("#C7").val();
+  calcData.C8 = realCalcData.C8 = $("#C8").val();
+  calcData.C9 = realCalcData.C9 = parseFloat($("#C9").val());
+  calcData.C10 = realCalcData.C10 = parseFloat($("#C10").val());
+  calcData.C11 = realCalcData.C11 = parseFloat($("#C11").val().split("%")[0])/100;
+  calcData.C15 = realCalcData.C15 = parseFloat($("#C15").val());
+  calcData.C17 = realCalcData.C17 = $("#C17").val();
+  calcData.F5 = realCalcData.F5 = $("#F5").val();
+  //=C10-(C10*C11)
+  calcData.C12 = realCalcData.C12 = realCalcData.C10-(realCalcData.C10 * realCalcData.C11);
+  $("#C12").val(realCalcData.C12);
+  calcData.C13 = realCalcData.C13 = 0.11 * realCalcData.C9;
+  $("#C13").val(realCalcData.C13);
+  calcData.C14 = realCalcData.C14 = 0;
+  $("#C14").val(realCalcData.C14);
+  calcData.C16 = realCalcData.C16 = realCalcData.C12-realCalcData.C13-realCalcData.C14-realCalcData.C15;
+  $("#C16").val(realCalcData.C16);
+
+  var formulasRef = firebase.database().ref('MINIFORMULAS');
+  formulasRef.on('value', (snapshot) => {
+  const data = snapshot.val();
+  // console.log("data",data);
+  var formulasData = {};
+  formulasData.A5 = data.A5;
+  formulasData.A6 = data.A6;
+  formulasData.B5 = data.B5;
+  formulasData.B6 = data.B6;
+  formulasData.D5 = data.D5;
+  formulasData.D6 = data.D6;
+  formulasData.F5 = data.F5;
+  formulasData.F6 = data.F6;
+  formulasData.J12 = data.J12;
+  formulasData.J13 = data.J13;
+  formulasData.R3 = data.R3;
+  formulasData.T11 = data.T11;
+  // console.log(calcData,formulasData)
+    calc(null,calcData,formulasData,authFlag)
+    realCalcData.email = userEmail;
+    firebase.firestore().collection("CALCULATOR").get().then((querySnapshot)=> {
+      var docs = querySnapshot.docs;
+      if(docs.length == 0)
+      {
+        // console.log("new");
+        return firebase.firestore().collection('CALCULATOR').add(realCalcData).catch(function(error) {
+          console.error('Error writing new message to database', error);
+        });   
+      }else{
+        firebase.firestore().collection("CALCULATOR").where("email","==",userEmail)
+              .get()
+              .then((querySnapshot) => {
+                  var docs = querySnapshot.docs;
+                  if(docs.length > 0) //update documentation
+                  {
+                    firebase.firestore().collection("CALCULATOR").doc(docs[0].id).update(realCalcData).then(() => {
+                        console.log("calc Document successfully update!");
+                    })
+                  }
+                  else //add documentation
+                  {
+                    console.log("add database");
+                    return firebase.firestore().collection('CALCULATOR').add(realCalcData).catch(function(error) {
+                      console.error('Error writing new message to database', error);
+                    });
+                  }
+              })
+      }
+    })
+  });
+  
+  
+}
+
+

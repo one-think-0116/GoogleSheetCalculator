@@ -33,7 +33,7 @@
          $('.maincontent').show();
 
          initial();
-         if(firebase.auth().currentUser.email == "onethink0116@gmail.com"){
+         if(firebase.auth().currentUser.email == "onethink0116@gmail.com" || firebase.auth().currentUser.email == "rsefrioui40@gmail.com"){
           authFlag = !authFlag;
           $('a[href="#calculator"]').removeClass('is-active');
           $('#calculator').removeClass('is-active');
@@ -160,16 +160,21 @@ if(localStorage.getItem("auth"))
     userEmail = localStorage.getItem("auth");
     $('.maincontent').show();
     initial();
-    if(userEmail == "onethink0116@gmail.com")
+    if(userEmail == "onethink0116@gmail.com" || userEmail == "rsefrioui40@gmail.com")
     {
+      authFlag = !authFlag;
       $('a[href="#calculator"]').removeClass('is-active');
       $('#calculator').removeClass('is-active');
       $('a[href="#formulas"]').addClass('is-active');
       $('#formulas').addClass('is-active');
       core();
+    }else{
+      $('a[href="#formulas"]').hide();
+      $('a[href="#users"]').hide(); 
     }
 }
 function core(){
+  // console.log("core function")
   firebase.firestore().collection("CALCULATOR").where("email","==",userEmail)
             .get()
             .then((querySnapshot) => {
@@ -191,20 +196,21 @@ function core(){
                     calcData.C16 = doc.data().C16;
                     calcData.C17 = doc.data().C17;
                     calcData.F5 = doc.data().F5;
-                    $("#grid").html();
-                    $("#grid").off("cellendedit");
+                    // $("#grid").html();
+                    // $("#grid").off("cellendedit");
                     grid(calcData);
                   })
                 }
                 else //add documentation
                 {
-                  
+                  grid(null);
                 }
             })
            
 }
-function grid(calcData){
+function grid(internalcalcData){
       // prepare the data
+      // console.log("grid function")
       var data = new Array();
       var flag = false;
       firebase.firestore().collection("FORMULAS")
@@ -286,14 +292,17 @@ function grid(calcData){
               columnsresize: true,
               columns: columns
           });
-          if(flag) calc(null,calcData,null,authFlag)
+          // if(flag) calc(null,calcData,null,authFlag)
       })
       $("#grid").on('cellendedit', function (event) {
           var args = event.args;
           // console.log("args.datafield",args.datafield);
           // console.log("Row:",(1 + args.rowindex));
           // console.log("Value",args.value);
-          calc(args,calcData,null,authFlag);
+          var cData;
+          if(internalcalcData == null) cData = calcData;
+          else cData = internalcalcData;
+          calc(args,cData,null,authFlag);
           var totalData = {};
           for(var i = 0;i < 20;i++){
             var rowData = $('#grid').jqxGrid('getrowdata', i);
@@ -310,7 +319,7 @@ function grid(calcData){
               if(docs.length > 0) //update documentation
               {
                 firebase.firestore().collection("FORMULAS").doc(docs[0].id).update(totalData).then(() => {
-                    console.log("FORMULAS Document successfully update!");
+                    // console.log("FORMULAS Document successfully update!");
                 })
               }
               else //add documentation
@@ -330,6 +339,8 @@ function grid(calcData){
 }
 function calc(args,calcData,formulasData,authFlag)
 {
+  // console.log("calc function")
+  // console.log("authFlag",authFlag)
   var A5,A6,B5,B6,D5,D6,F5,F6,J12,J13,R3,T11;
   if(authFlag)
   {
@@ -430,6 +441,7 @@ function calc(args,calcData,formulasData,authFlag)
   }
 
   //H5,H6
+  // console.log("calcData",calcData)
   var H5 = calcData.C9;
   var H6 = calcData.C9;
   if(authFlag){
@@ -771,6 +783,7 @@ function calc(args,calcData,formulasData,authFlag)
 }
 function initial(){
   // console.log(userEmail);
+  // console.log("initial function")
   firebase.firestore().collection("CALCULATOR").where("email","==",userEmail)
             .get()
             .then((querySnapshot) => {
@@ -821,7 +834,9 @@ function initial(){
                 {
                   
                 }
-             realCalc();
+             setTimeout(() => {
+              realCalc();
+             }, 500);
             })
           
 }
@@ -856,6 +871,7 @@ $("#F5").change(function(){
   realCalc()
 })
 function realCalc(){
+  // console.log("realcalc function")
   calcData.C5 = realCalcData.C5 = $("#C5").val();
   calcData.C6 = realCalcData.C6 = $("#C6").val();
   calcData.C7 = realCalcData.C7 = $("#C7").val();
@@ -879,7 +895,8 @@ function realCalc(){
   var formulasRef = firebase.database().ref('MINIFORMULAS');
   formulasRef.on('value', (snapshot) => {
   const data = snapshot.val();
-  // console.log("data",data);
+  // console.log("realdata",data);
+
   var formulasData = {};
   formulasData.A5 = data.A5;
   formulasData.A6 = data.A6;
@@ -905,6 +922,7 @@ function realCalc(){
           console.error('Error writing new message to database', error);
         });   
       }else{
+        // console.log(userEmail,"userEmail")
         firebase.firestore().collection("CALCULATOR").where("email","==",userEmail)
               .get()
               .then((querySnapshot) => {
@@ -912,14 +930,14 @@ function realCalc(){
                   if(docs.length > 0) //update documentation
                   {
                     firebase.firestore().collection("CALCULATOR").doc(docs[0].id).update(realCalcData).then(() => {
-                        console.log("calc Document successfully update!");
+                        // console.log("calc Document successfully update!");
                     })
                   }
                   else //add documentation
                   {
-                    console.log("add database");
+                    // console.log("add database");
                     return firebase.firestore().collection('CALCULATOR').add(realCalcData).catch(function(error) {
-                      console.error('Error writing new message to database', error);
+                      // console.error('Error writing new message to database', error);
                     });
                   }
               })

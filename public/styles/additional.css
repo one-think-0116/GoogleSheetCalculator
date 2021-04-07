@@ -1,3 +1,17 @@
+@font-face {
+    font-family: 'MyWebFont';
+    src: url('./fonts/Adlery-Pro-trial.ttf') format('truetype');
+  }
+h3#title {
+    font-family: monospace;
+    /* font-size: 4em; */
+    color: floralwhite;
+}
+
+h3#title img {
+    transform: translateY(-5px);
+}
+
 a:hover {
     text-decoration: none;
 }
